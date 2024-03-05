@@ -4,49 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Module</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
-    <script>
-        const socket = io();
-
-                function joinchat() {
-                    const username = document.getElementById("username").value;
-                    socket.emit("newuser", username);
-                }
-
-                function sendmessage() {
-                    const message = document.getElementById("message-input").value;
-                    socket.emit("chat", message);
-                }
-    </script>
 </head>
 <body>
-    <div class="app">
-        <div class="screen join-screen active">
-            <div class="form">
-                <h2>Join Chatroom</h2>
-                <div class="form-input">
-                    <label>Username</label>
-                    <input type="text" id="username">
-                </div>
-                <div class="form-input">
-                    <button id="join-user" onclick="joinchat()">Join</button>
-                </div>
+    <div class="app" style="position: fixed; width: 100%; height: 100%; max-width: 600px; background: #fff; border-left: 1px solid #eee; border-right: 1px solid #eee;">
+        <div class="screen chat-screen" style="display: flex; justify-content: center; align-items: center; flex-direction: column; height: 95vh;">
+            <div class="header" style="background: #111; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0px 20px;">
+                <div class="logo" style="font-size: 18px; color: #eee; font-weight: 600;">Chat Room</div>
+<!--                <button id="exit-chat" style="padding: 5px 10px; border: 1px solid #eee; background: transparent; color: #eee; font-size: 15px; cursor: pointer; outline: none;">Exit</button>-->
             </div>
-        </div>
-        <div class="screen chat-screen">
-            <div class="header">
-                <div class="logo">Chat Room</div>
-                <button id="exit-chat">Exit</button>
-            </div>
-            <div class="messages"></div>
-            <div class="typebox">
-                <input type="text" id="message-input" placeholder="Type your message...">
-                <button id="send-message" onclick="sendmessage()">Send</button>
+            <div class="messages" style="width: 100%; height: calc(100% - 100px); background: #f5f5f5; overflow: auto;"></div>
+            <div style="flex: 1;"></div>
+            <div class="typebox" style="width: 100%; height: 50px; display: flex;">
+                <input type="text" id="message-input" placeholder="Type your message..." style="flex: 1; height: 50px; font-size: 18px;">
+                <button id="send-message" style="width: 80px; height: 100%; background: #111; color: #eee; font-size: 16px; outline: none; border: none; cursor: pointer;">Send</button>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const messagesDiv = document.querySelector('.messages');
+        const messageInput = document.getElementById("message-input");
+        const sendMessageBtn = document.getElementById("send-message");
+
+        sendMessageBtn.addEventListener("click", sendMessage);
+
+        socket.on("chat message", function(message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = message;
+            messagesDiv.appendChild(messageDiv);
+        });
+
+        function sendMessage() {
+            const message = messageInput.value;
+            if (message.trim() !== "") {
+                socket.emit("chat message", message);
+                messageInput.value = "";
+            }
+        }
+    </script>
 </body>
 </html>

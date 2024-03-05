@@ -1,25 +1,32 @@
 const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
 const path = require("path");
-const app = express();
-const server = require("http").createServer(app);
-const io = require("socket.io")(server);
 
-app.use(express.static(path.join(__dirname, "public"))); // Corrected _dirname to __dirname
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 io.on("connection", function(socket) {
-  socket.on("newuser", function(username) {
-    socket.broadcast.emit("update", username + " joined the conversation"); // Corrected the string concatenation
-  });
+    console.log("A user connected");
 
-  socket.on("exituser", function(username) {
-    socket.broadcast.emit("update", username + " left the conversation");
-  });
+    socket.on("disconnect", function() {
+        console.log("User disconnected");
+    });
 
-  socket.on("chat", function(message) {
-    socket.broadcast.emit("chat", message);
-  });
+    socket.on("chat message", function(message) {
+        console.log("Message:", message);
+        io.emit("chat message", message);
+    });
 });
-if(server){
-  console.log('server started at port')
-}
-server.listen(5000);
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+});
