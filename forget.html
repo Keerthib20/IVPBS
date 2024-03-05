@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: url('ui1.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .upper-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(94, 7, 234, 0.323);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #dccfcf;
+            margin: 0 15px;
+        }
+
+        .nav-links .left-icons {
+            margin-right: auto;
+        }
+
+        .nav-links .right-icons {
+            margin-left: auto;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .container h2 {
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .password-toggle {
+            position: relative;
+            display: inline-block;
+        }
+
+        .password-toggle input {
+            padding-right: 30px;
+        }
+
+        .password-toggle .toggle-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .form-group button {
+            background-color: rgb(29, 89, 229);
+            color: rgb(252, 251, 251);
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: rgba(28, 114, 235, 0.658);
+        }
+    </style>
+</head>
+<body>
+    <div class="upper-bar">
+        <div class="nav-links">
+            <div class="left-icons">
+                <a href="home.html">Home</a>
+                <a href="features.html">Features</a>
+            </div>
+            <a href="#" class="logo">IVPBS</a>
+            <div class="right-icons">
+                <a href="contact.html">Contact</a>
+                <a href="review.html">Review</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Forgot Password</h2>
+        <p>New Password</p>
+
+        <form id="forgotPasswordForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group password-toggle">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+                <span class="toggle-icon" onclick="togglePasswordVisibility('newPassword')">&#x1F441;</span>
+            </div>
+            <div class="form-group password-toggle">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <span class="toggle-icon" onclick="togglePasswordVisibility('confirmPassword')">&#x1F441;</span>
+            </div>
+            <div class="form-group">
+                <button type="submit">Reset Password</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
+
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Add logic for resetting password
+            alert('Password reset logic goes here!');
+        });
+    </script>
+</body>
+</html>

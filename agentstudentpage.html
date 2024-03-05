@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency Search</title>
+    <style>
+        body {
+            background-color: #3498db; /* Blue background color */
+            color: #fff; /* Text color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #search-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #agency-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .agency-card {
+            background-color: rgba(255, 255, 255, 0.7); /* Adding a semi-transparent white background to improve readability */
+            color: #333;
+            width: 300px;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .agency-card img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .bubble-icons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .round-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db; /* Blue background color for the icons */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .round-icon span {
+            font-size: 20px;
+            color: #fff; /* White color for the symbol */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Agency Search</h1>
+    </header>
+
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Search for a place">
+        <button onclick="search()">Search</button>
+    </div>
+
+    <div id="agency-list"></div>
+
+    <script>
+        function search() {
+            // In a real scenario, you would fetch data from a server based on the search input
+            // For the purpose of this example, let's create dummy data
+            const agencies = [
+                { name: "Agency 1", address: "123 Main St", photo: "agency1.jpg", contact: "123-456-7890", rating: 4.5 },
+                { name: "Agency 2", address: "456 Oak St", photo: "agency2.jpg", contact: "987-654-3210", rating: 3.8 },
+                // Add more agencies as needed
+            ];
+
+            const agencyListContainer = document.getElementById("agency-list");
+            agencyListContainer.innerHTML = ""; // Clear previous search results
+
+            agencies.forEach(agency => {
+                const agencyCard = document.createElement("div");
+                agencyCard.classList.add("agency-card");
+
+                const image = document.createElement("img");
+                image.src = agency.photo;
+                agencyCard.appendChild(image);
+
+                const name = document.createElement("h2");
+                name.textContent = agency.name;
+                agencyCard.appendChild(name);
+
+                const address = document.createElement("p");
+                address.textContent = "Address: " + agency.address;
+                agencyCard.appendChild(address);
+
+                const contact = document.createElement("p");
+                contact.textContent = "Contact: " + agency.contact;
+                agencyCard.appendChild(contact);
+
+                const ratingContainer = document.createElement("div");
+                ratingContainer.classList.add("rating");
+                for (let i = 0; i < 5; i++) {
+                    const star = document.createElement("span");
+                    star.textContent = i < Math.round(agency.rating) ? "★" : "☆";
+                    ratingContainer.appendChild(star);
+                }
+                agencyCard.appendChild(ratingContainer);
+
+                const bubbleIcons = document.createElement("div");
+                bubbleIcons.classList.add("bubble-icons");
+
+                const chatIcon = document.createElement("div");
+                chatIcon.classList.add("round-icon");
+                chatIcon.innerHTML = "<span>&#x1F4AC;</span>"; // Chat symbol
+                bubbleIcons.appendChild(chatIcon);
+
+                const rupeesIcon = document.createElement("div");
+                rupeesIcon.classList.add("round-icon");
+                rupeesIcon.innerHTML = "<span>&#x20B9;</span>"; // Rupees symbol
+                bubbleIcons.appendChild(rupeesIcon);
+
+                const messageIcon = document.createElement("div");
+                messageIcon.classList.add("round-icon");
+                messageIcon.innerHTML = "<span>&#x1F4E9;</span>"; // Message symbol
+                bubbleIcons.appendChild(messageIcon);
+
+                agencyCard.appendChild(bubbleIcons);
+
+                agencyListContainer.appendChild(agencyCard);
+            });
+        }
+    </script>
+</body>
+</html>

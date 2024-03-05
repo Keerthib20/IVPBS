@@ -1,0 +1,128 @@
+-<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6f7ff; /* Light Blue */
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: auto;
+            overflow-y: scroll;
+            max-height: 400px;
+            padding: 20px;
+        }
+
+        #upper-bar, #down-bar {
+            background-color: #808080; /* Grey */
+            color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #clip-box {
+            display: none;
+            background-color: #f0f0f0; /* Light Grey */
+            padding: 10px;
+            position: absolute;
+            bottom: 60px;
+            right: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+        }
+
+        .message-box {
+            width: 100%; /* Adjusted width */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .clip-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .clip-icon, .send-icon {
+            font-size: 20px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .feed {
+            margin-top: 20px;
+        }
+        #down-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="upper-bar">
+        <div>Company Name</div>
+        <div>
+            <span class="clip-icon" onclick="toggleClipBox()">&#128206;</span>
+            <span>&#9776;</span>
+            <span>&#9990;</span>
+        </div>
+    </div>
+
+    <div id="chat-container" class="feed"></div>
+
+    <div id="down-bar">
+        <input type="text" class="message-box" placeholder="Type your message..." id="message-input">
+        <div class="clip-icon" onclick="toggleClipBox()">&#128206;</div>
+        <div class="send-icon" onclick="sendMessage()">&#10148;</div>
+    </div>
+
+    <div id="clip-box">
+        <div class="clip-options">
+            <span>&#128196; Document</span>
+            <span>&#128247; View Gallery</span>
+            <span>&#128205; Share Location</span>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var messageInput = document.getElementById('message-input');
+            var message = messageInput.value.trim();
+
+            if (message !== '') {
+                displayMessage('You', message, true);
+                // In a real-world scenario, you would send the message to the server here.
+                // You can use WebSocket or AJAX for real-time communication.
+
+                // Clear the input field
+                messageInput.value = '';
+            }
+        }
+
+        function displayMessage(sender, text, isOwnMessage) {
+            var chatContainer = document.getElementById('chat-container');
+            var messageElement = document.createElement('div');
+            messageElement.className = isOwnMessage ? 'own-message' : 'other-message';
+            messageElement.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatContainer.appendChild(messageElement);
+
+            // Scroll to the bottom of the chat container
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function toggleClipBox() {
+            var clipBox = document.getElementById('clip-box');
+            clipBox.style.display = clipBox.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

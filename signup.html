@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- importing firebase liobraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script>
+        // firebase credentials (to identify our firebase backend)
+        const firebaseConfig = {
+          apiKey: "AIzaSyBZL5ajdJR_wnjrvWhIzxTfCP56MQXf0KI",
+          authDomain: "ivpbs-f2ca0.firebaseapp.com",
+          databaseURL: "https://ivpbs-f2ca0-default-rtdb.firebaseio.com",
+          projectId: "ivpbs-f2ca0",
+          storageBucket: "ivpbs-f2ca0.appspot.com",
+          messagingSenderId: "1049725030175",
+          appId: "1:1049725030175:web:c9bbf54d8e6003060e6a2a",
+          measurementId: "G-8PXXV5TNTR"
+        };
+
+        //starting firebse app
+        firebase.initializeApp(firebaseConfig);
+        //starting firestore databse
+        var firestore = firebase.firestore();
+      </script>
+</head>
+<body>
+    <div class="upper-bar">
+        <div class="nav-links">
+            <div class="left-icons">
+                <a href="home.html">Home</a>
+                <a href="features.html">Features</a>
+            </div>
+            <a href="#" class="logo">IVPBS</a>
+            <div class="right-icons">
+                <a href="contact.html">Contact</a>
+                <a href="review.html">Review</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="create-account-container">
+        <h2>Create Account</h2>
+        <div id="createAccountForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="userType">User Type:</label>
+                <select id="userType" name="userType" value="student" required onchange="showOptions()">
+                    <option value="student" >Student</option>
+                    <option value="agency">Agency</option>
+                    <option value="company">Company</option>
+                </select>
+            </div>
+            <div id="studentOptions" class="form-group" style="display: none;">
+                <label for="institutionName">Institution Name:</label>
+                <input type="text" id="institutionName" name="institutionName">
+                <label for="institutionId">Institution ID:</label>
+                <input type="text" id="institutionId" name="institutionId">
+            </div>
+            <div id="agencyOptions" class="form-group" style="display: none;">
+                <label for="headOffice">Head Office:</label>
+                <input type="text" id="headOffice" name="headOffice">
+                <label for="licenseId">License ID:</label>
+                <input type="text" id="licenseId" name="licenseId">
+            </div>
+            <div id="companyOptions" class="form-group" style="display: none;">
+                <label for="companyName">Company Name:</label>
+                <input type="text" id="companyName" name="companyName">
+                <label for="companyId">Company ID:</label>
+                <input type="text" id="companyId" name="companyId">
+            </div>
+            <p  id="error-message"></p>
+            <div class="form-group">
+                <button onclick="signup(event)">Submit</button>
+            </div>
+        </div>
+    </div>
+    <div class="animated-text">Window to the real-world applications of academic concepts</div>
+    <script>
+        showOptions();
+        function showOptions() {
+            var userType = document.getElementById('userType').value;
+            var studentOptions = document.getElementById('studentOptions');
+            var agencyOptions = document.getElementById('agencyOptions');
+            var companyOptions = document.getElementById('companyOptions');
+
+            studentOptions.style.display = userType === 'student' ? 'block' : 'none';
+            agencyOptions.style.display = userType === 'agency' ? 'block' : 'none';
+            companyOptions.style.display = userType === 'company' ? 'block' : 'none';
+        }
+        function signup(){
+
+            //getting values of fields form html
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var institutionName= document.getElementById("institutionName").value;
+
+            var institutionId= document.getElementById("institutionId").value;
+            var userType = document.getElementById("userType").value;
+
+            var headOffice = document.getElementById("headOffice").value;
+            var licenseId = document.getElementById("licenseId").value;
+
+            var companyName = document.getElementById("companyName").value;
+            var companyId = document.getElementById("companyId").value;
+
+            // formating data to send to databse
+            var data = {
+                name,
+                email,
+                userType,
+            };
+            if(userType=='student'){
+                data.institutionId=institutionId;
+                data.institutionName=institutionName;
+            }else if(userType=='company'){
+                data.companyName=companyName;
+                data.companyId=companyId;
+            }else{
+                data.headOffice=headOffice;
+                data.licenseId=licenseId;
+            }
+
+            //creating user in firebase authenticn
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // after signup if succesful
+                // soring user data in firesore database
+                console.log("Signed up:");
+                var collectionRef = firestore.collection("users");//selecting the collection to add data
+                collectionRef.add(data)//witing data to collection (data created above)
+                .then(function(docRef) {
+                    // if adding is successful
+                    window.location='/login.html' //goning to login page
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
+            })
+            .catch((error) => {
+                //after signup if error
+                console.error(error);
+            });
+
+
+        }
+
+    </script>
+</body>
+</html>

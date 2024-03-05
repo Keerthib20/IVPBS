@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBZL5ajdJR_wnjrvWhIzxTfCP56MQXf0KI",
+          authDomain: "ivpbs-f2ca0.firebaseapp.com",
+          databaseURL: "https://ivpbs-f2ca0-default-rtdb.firebaseio.com",
+          projectId: "ivpbs-f2ca0",
+          storageBucket: "ivpbs-f2ca0.appspot.com",
+          messagingSenderId: "1049725030175",
+          appId: "1:1049725030175:web:c9bbf54d8e6003060e6a2a",
+          measurementId: "G-8PXXV5TNTR"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: url('ui1.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .upper-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(94, 7, 234, 0.323);
+        }
+
+        .upper-bar img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #dccfcf;
+            margin: 0 15px;
+        }
+
+        .nav-links .left-icons {
+            margin-right: auto;
+        }
+
+        .nav-links .right-icons {
+            margin-left: auto;
+        }
+        .animated-text {
+            text-align: right;
+            color: #fff;
+            font-size: 24px;
+            margin-top: 20px;
+            margin-right: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            font-family:cursive;
+            animation: typing 4s steps(22) infinite;
+        }
+        .logo {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .right-icons {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .right-icons a {
+            text-decoration: none;
+            color: #e5e1e1;
+            margin-left: 15px;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            margin: 20px 20px 20px 20px;
+            position: absolute;
+            left: 20px;
+            top: 150px;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            background-color: rgb(29, 89, 229);
+            color: rgb(252, 251, 251);
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: rgba(28, 114, 235, 0.658);
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="upper-bar">
+        <div class="nav-links">
+            <div class="left-icons">
+                <a href="home.html">Home</a>
+                <a href="features.html">Features</a>
+            </div>
+            <a href="#" class="logo">IVPBS</a>
+            <div class="right-icons">
+                <a href="contact.html">Contact</a>
+                <a href="review.html">Review</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-container">
+        <h2>Login</h2>
+        <!-- Form structure without email and password fields -->
+        <div id="loginForm">
+            <!-- You can add the necessary form fields here if needed -->
+        </div>
+
+        <!-- Agency details form (hidden by default) -->
+        <div id="agencyForm" style="display: none;">
+            <h2>Add Details</h2>
+            <div class="form-group">
+                <label for="agencyName">Name of Agency:</label>
+                <input type="text" id="agencyName" name="agencyName" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="agencyEmail">Email ID:</label>
+                <input type="email" id="agencyEmail" name="agencyEmail" required>
+            </div>
+            <div class="form-group">
+                <button onclick="submitAgencyDetails()">Submit</button>
+            </div>
+        </div>
+    </div>
+    <div class="animated-text">Window to the real-world applications of academic concepts</div>
+    <script>
+        var firestore = firebase.firestore(); // connecting firestore database
+
+        function login() {
+            // getting value of email and password from html
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // login
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // if login is successful
+                    var user = userCredential.user;
+                    console.log("Signed in as:", user.email);
+                    // Show agency details form after login
+                    document.getElementById("loginForm").style.display = "none";
+                    document.getElementById("agencyForm").style.display = "block";
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
+        function submitAgencyDetails() {
+            // Getting values from agency details form
+            var agencyName = document.getElementById("agencyName").value;
+            var location = document.getElementById("location").value;
+            var phoneNumber = document.getElementById("phoneNumber").value;
+            var agencyEmail = document.getElementById("agencyEmail").value;
+
+            // You can save the agency details to Firestore or perform any other necessary action
+            console.log("Agency Details Submitted:", agencyName, location, phoneNumber, agencyEmail);
+        }
+    </script>
+</body>
+
+</html>
