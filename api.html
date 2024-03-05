@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="api.css">
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Payment Details</h2>
+        <form id="payment-form">
+            <label for="amount">Amount to Pay:</label>
+            <input type="text" id="amount" name="amount" required>
+
+            <label for="payment-method">Select Payment Method:</label>
+            <select id="payment-method" name="payment-method" required>
+                <option value="upi">UPI</option>
+                <option value="debit-card">Debit Card</option>
+            </select>
+
+            <div id="upi-options" class="payment-options">
+                <label for="upi-id">UPI ID:</label>
+                <input type="text" id="upi-id" name="upi-id">
+            </div>
+
+            <div id="debit-card-options" class="payment-options">
+                <label for="card-number">Card Number:</label>
+                <input type="text" id="card-number" name="card-number">
+
+                <label for="expiry-date">Expiry Date:</label>
+                <input type="text" id="expiry-date" name="expiry-date">
+
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv">
+            </div>
+
+            <button type="submit">Pay Now</button>
+        </form>
+    </div>
+
+    <script src="apijs.js"></script>
+</body>
+</html>

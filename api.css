@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('img.avif');
+    background-size: cover;
+}
+
+.payment-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.payment-options {
+    display: none;
+}
+
+button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
