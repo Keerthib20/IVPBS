@@ -19,5 +19,7 @@ io.on("connection", function(socket) {
     socket.broadcast.emit("chat", message);
   });
 });
-
+if(server){
+  console.log('server started at port')
+}
 server.listen(5000);
