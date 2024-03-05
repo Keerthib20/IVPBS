@@ -10,7 +10,7 @@ const io = socketIo(server);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function(req, res) {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.sendFile(path.join(__dirname, "/", "index.html"));
 });
 
 io.on("connection", function(socket) {
@@ -20,9 +20,9 @@ io.on("connection", function(socket) {
         console.log("User disconnected");
     });
 
-    socket.on("chat message", function(message) {
-        console.log("Message:", message);
-        io.emit("chat message", message);
+    socket.on("chat message", function(data) {
+        console.log("Message:", data);
+        io.emit("chat message", data);
     });
 });
 
