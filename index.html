@@ -8,9 +8,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
     <script>
         const socket = io();
-        function sendmessage(){
-            io.
-        }
+
+                function joinchat() {
+                    const username = document.getElementById("username").value;
+                    socket.emit("newuser", username);
+                }
+
+                function sendmessage() {
+                    const message = document.getElementById("message-input").value;
+                    socket.emit("chat", message);
+                }
     </script>
 </head>
 <body>
@@ -23,19 +30,19 @@
                     <input type="text" id="username">
                 </div>
                 <div class="form-input">
-                    <button id="join-user" onclick="">Joidn</button>
+                    <button id="join-user" onclick="joinchat()">Join</button>
                 </div>
             </div>
         </div>
         <div class="screen chat-screen">
             <div class="header">
-                <div class="logo">Chat Rddoom</div>
+                <div class="logo">Chat Room</div>
                 <button id="exit-chat">Exit</button>
             </div>
             <div class="messages"></div>
             <div class="typebox">
                 <input type="text" id="message-input" placeholder="Type your message...">
-                <button id="send-message">Send</button>
+                <button id="send-message" onclick="sendmessage()">Send</button>
             </div>
         </div>
     </div>
