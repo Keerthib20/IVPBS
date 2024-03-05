@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         app.querySelector(".chat-screen").classList.add("active");
     });
 
+    
     app.querySelector("#exit-chat").addEventListener("click", () => {
         socket.emit("exituser", username);
         app.querySelector(".chat-screen").classList.remove("active");
