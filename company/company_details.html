@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBZL5ajdJR_wnjrvWhIzxTfCP56MQXf0KI",
+          authDomain: "ivpbs-f2ca0.firebaseapp.com",
+          databaseURL: "https://ivpbs-f2ca0-default-rtdb.firebaseio.com",
+          projectId: "ivpbs-f2ca0",
+          storageBucket: "ivpbs-f2ca0.appspot.com",
+          messagingSenderId: "1049725030175",
+          appId: "1:1049725030175:web:c9bbf54d8e6003060e6a2a",
+          measurementId: "G-8PXXV5TNTR"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: url('travel.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .upper-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: rgba(94, 7, 234, 0.323);
+        }
+
+        .upper-bar img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #dccfcf;
+            margin: 0 15px;
+        }
+
+        .nav-links .left-icons {
+            margin-right: auto;
+        }
+
+        .nav-links .right-icons {
+            margin-left: auto;
+        }
+
+        .right-icons {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .right-icons a {
+            text-decoration: none;
+            color: #e5e1e1;
+            margin-left: 15px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            margin: 20px auto; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+        }
+
+        .form-container label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="upper-bar">
+        <!-- Your navigation links here -->
+    </div>
+
+    <div class="form-container" id="company-form">
+        <h2>Add Company Details</h2>
+        <form id="addCompanyForm">
+            <div class="form-group">
+                <label for="companyName">Company Name:</label>
+                <input type="text" id="companyName" name="companyName" required>
+            </div>
+            <div class="form-group">
+                <label for="companyLocation">Location:</label>
+                <input type="text" id="companyLocation" name="companyLocation" required>
+            </div>
+            <div class="form-group">
+                <label for="companyPhone">Phone Number:</label>
+                <input type="text" id="companyPhone" name="companyPhone" required>
+            </div>
+            <div class="form-group">
+                <label for="companyEmail">Email ID:</label>
+                <input type="email" id="companyEmail" name="companyEmail" required>
+            </div>
+            <div class="form-group">
+                <button onclick="submitForm()">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function submitForm() {
+            // Extract form data
+            var companyName = document.getElementById("companyName").value;
+            var companyLocation = document.getElementById("companyLocation").value;
+            var companyPhone = document.getElementById("companyPhone").value;
+            var companyEmail = document.getElementById("companyEmail").value;
+
+            // Access the Firestore database and add the data
+            var firestore = firebase.firestore();
+            firestore.collection("companies").add({
+                name: companyName,
+                location: companyLocation,
+                phone: companyPhone,
+                email: companyEmail
+            })
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+            });
+
+            // Reset form
+            document.getElementById("addCompanyForm").reset();
+        }
+    </script>
+</body>
+</html>
+git 
