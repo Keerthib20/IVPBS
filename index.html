@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Module</title>
+</head>
+<body>
+    <div class="app" style="position: fixed; width: 100%; height: 100%; max-width: 600px; background: #fff; border-left: 1px solid #eee; border-right: 1px solid #eee;">
+        <div class="screen chat-screen" style="display: flex; justify-content: center; align-items: center; flex-direction: column; height: 95vh;">
+            <div class="header" style="background: #111; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0px 20px;">
+                <div class="logo" style="font-size: 18px; color: #eee; font-weight: 600;">Chat Room</div>
+            </div>
+            <div class="messages" style="width: 100%; height: calc(100% - 100px); background: #f5f5f5; overflow: auto;"></div>
+            <div style="flex: 1;"></div>
+            <div class="typebox" style="width: 100%; height: 50px; display: flex;">
+                <input type="text" id="username-input" placeholder="Your Username..." style="flex: 1; height: 50px; font-size: 18px;">
+                <input type="text" id="message-input" placeholder="Type your message..." style="flex: 3; height: 50px; font-size: 18px;">
+                <button id="send-message" style="width: 80px; height: 100%; background: #111; color: #eee; font-size: 16px; outline: none; border: none; cursor: pointer;">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const usernameInput = document.getElementById("username-input");
+        const messageInput = document.getElementById("message-input");
+        const sendMessageBtn = document.getElementById("send-message");
+
+        sendMessageBtn.addEventListener("click", sendMessage);
+
+        socket.on("chat message", function(data) {
+            const { username, message } = data;
+            const messagesDiv = document.querySelector('.messages');
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = `${username}: ${message}`;
+            messagesDiv.appendChild(messageDiv);
+        });
+
+        function sendMessage() {
+            const username = usernameInput.value.trim();
+            const message = messageInput.value.trim();
+            if (username && message) {
+                socket.emit("chat message", { username, message });
+                messageInput.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
