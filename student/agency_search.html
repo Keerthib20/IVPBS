@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script>
+       const firebaseConfig = {
+          apiKey: "AIzaSyBZL5ajdJR_wnjrvWhIzxTfCP56MQXf0KI",
+          authDomain: "ivpbs-f2ca0.firebaseapp.com",
+          databaseURL: "https://ivpbs-f2ca0-default-rtdb.firebaseio.com",
+          projectId: "ivpbs-f2ca0",
+          storageBucket: "ivpbs-f2ca0.appspot.com",
+          messagingSenderId: "1049725030175",
+          appId: "1:1049725030175:web:c9bbf54d8e6003060e6a2a",
+          measurementId: "G-8PXXV5TNTR"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency Search</title>
+    <style>
+        body {
+            background-color: #3498db; /* Blue background color */
+            color: #fff; /* Text color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #search-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #agency-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .agency-card {
+            background-color: rgba(255, 255, 255, 0.7); /* Adding a semi-transparent white background to improve readability */
+            color: #333;
+            width: 300px;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .agency-card img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .bubble-icons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .round-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db; /* Blue background color for the icons */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .round-icon span {
+            font-size: 20px;
+            color: #fff; /* White color for the symbol */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Agency Search</h1>
+    </header>
+
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Search for an agency">
+        <button onclick="search()">Search</button>
+    </div>
+
+    <div id="agency-list"></div>
+
+    <script>
+        function search() {
+            const searchInput = document.getElementById("search-input").value.toLowerCase();
+            const agencyListContainer = document.getElementById("agency-list");
+            agencyListContainer.innerHTML = ""; // Clear previous search results
+
+            // Access the Firestore database and fetch agencies
+            const firestore = firebase.firestore();
+            const agenciesRef = firestore.collection("agency");
+
+            agenciesRef.where("name", ">=", searchInput).get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                        const agency = doc.data();
+                        const agencyCard = document.createElement("div");
+                        agencyCard.classList.add("agency-card");
+
+                        const name = document.createElement("h2");
+                        name.textContent = agency.name;
+                        agencyCard.appendChild(name);
+
+                        const location = document.createElement("p");
+                        location.textContent = "location: " + agency.location;
+                        agencyCard.appendChild(location);
+
+                        const phone = document.createElement("p");
+                        phone.textContent = "Phone Number: " + agency.phone;
+                        agencyCard.appendChild(phone);
+
+                        const email = document.createElement("p");
+                        email.textContent = "Email ID: " + agency.email;
+                        agencyCard.appendChild(email);
+
+
+
+
+                        const ratingContainer = document.createElement("div");
+                        ratingContainer.classList.add("rating");
+                        for (let i = 0; i < 5; i++) {
+                            const star = document.createElement("span");
+                            star.textContent = i < Math.round(agency.rating) ? "★" : "☆";
+                            ratingContainer.appendChild(star);
+                        }
+                        agencyCard.appendChild(ratingContainer);
+
+                        const bubbleIcons = document.createElement("div");
+                        bubbleIcons.classList.add("bubble-icons");
+
+                        const chatIcon = document.createElement("div");
+                        chatIcon.classList.add("round-icon");
+                       
+                        chatIcon.innerHTML = "<span>&#x1F4AC;</span>"; // Chat symbol
+                         bubbleIcons.appendChild(chatIcon);
+
+                    const rupeesIcon = document.createElement("div");
+                    rupeesIcon.classList.add("round-icon");
+                    rupeesIcon.innerHTML = "<span>&#x20B9;</span>"; // Rupees symbol
+                    bubbleIcons.appendChild(rupeesIcon);
+
+                    const messageIcon = document.createElement("div");
+                    messageIcon.classList.add("round-icon");
+                    messageIcon.innerHTML = "<span>&#x1F4E9;</span>"; // Message symbol
+                    bubbleIcons.appendChild(messageIcon);
+
+                    agencyCard.appendChild(bubbleIcons);
+
+                    agencyListContainer.appendChild(agencyCard);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching agencies: ", error);
+            });
+    }
+</script>
+</body>
+</html>
