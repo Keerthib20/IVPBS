@@ -16,6 +16,13 @@
           measurementId: "G-8PXXV5TNTR"
         };
         firebase.initializeApp(firebaseConfig);
+
+         // Get a reference to the storage service
+    var storage = firebase.storage();
+
+// Create a storage reference from our storage service
+var storageRef = storage.ref();
+
       </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +34,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            background: url('ui1.jpg') no-repeat center center fixed;
+            background: url('travel.jpg') no-repeat center center fixed;
             background-size: cover;
         }
 
@@ -103,8 +110,8 @@
             text-align: center;
             margin: 20px 20px 20px 20px;
             position: absolute;
-            left: 20px;
-            top: 150px;
+            left: 36%;
+            top: 20%;
         }
 
         .login-container h2 {
@@ -182,32 +189,57 @@
             <div class="form-group">
                 <button onclick="login()">Login</button>
             </div>
+        <div class="forgot-password-link">
+            <a href="forgotpassword.html">Forgot Password?</a>
+        </div>
+    
             <div class="signup-link">
                 <p>Not registered? <a href="Signup.html">Sign up</a></p>
             </div>
         </div>
     </div>
     <div class="animated-text">Window to the real-world applications of academic concepts</div>
-   <script>
-
-    var firestore = firebase.firestore();//connecting fire store database
-
-    function login() {
-        //getting value of email and password from html
-var email = document.getElementById("email").value;
-var password = document.getElementById("password").value;
-
-// login
-firebase.auth().signInWithEmailAndPassword(email, password)
-  .then((userCredential) => {
-    // if login is successful
-    console.log("Signed in");
-    window.location='/dashboard_api.html'//going to home page
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-}
-</script>
+    <script>
+        var firestore = firebase.firestore();
+    
+        function login() {
+            //getting value of email and password 
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+    //login
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    var user = userCredential.user;
+    
+                    // Fetch user type from Firestore
+                    firestore.collection("users").where("email", "==", email).get()
+                        .then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+                                var userType = doc.data().userType;
+                                // Redirect user based on userType
+                                if (userType === 'student') {
+                                    console.log("Signed in as:", user.email);
+                                    window.location = '/student_home.html';
+                                } else if (userType === 'agency') {
+                                    console.log("Signed in as:", user.email);
+                                    window.location = '/agency_home.html';
+                                } else if (userType === 'company') {
+                                    console.log("Signed in as:", user.email);
+                                    window.location = '/company_home.html';
+                                } else {
+                                    console.error("Unknown user type:", userType);
+                                }
+                            });
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching user type:", error);
+                        });
+                })
+                .catch((error) => {
+                    console.error("Login error:", error);
+                });
+        }
+    </script>
+    
 </body>
 </html>
