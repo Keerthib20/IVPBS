@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Feedback</title>
+    <!-- Include Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.3.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.3.0/firebase-firestore-compat.js"></script>
+
     <style>
         body {
-            background-color: #ecf0f1; /* Whitish-blue background color */
+            background-color: #ecf0f1;
             color: #333;
             font-family: Arial, sans-serif;
             margin: 0;
@@ -39,17 +43,17 @@
 
         .star {
             font-size: 24px;
-            color: #ccc; /* Initial color - grey */
+            color: #ccc;
             cursor: pointer;
         }
 
         .star:hover, .star.clicked {
-            color: #FFD700; /* Hover and Clicked color - golden */
+            color: #FFD700;
         }
 
         #feedback-message {
             margin-bottom: 10px;
-            color: black; /* Black color for the message */
+            color: black;
         }
 
         #feedback-category, #feedback-text {
@@ -101,10 +105,6 @@
         <button id="send-button" onclick="sendFeedback()">Send Feedback</button>
     </main>
 
-    <!-- Include Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.3.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.3.0/firebase-firestore.js"></script>
-
     <script>
         // Your Firebase configuration
         const firebaseConfig = {
@@ -120,11 +120,9 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-
         const db = firebase.firestore();
 
         function setRating(rating) {
-            // Set the selected rating and update the visual representation
             document.getElementById('star-rating').value = rating;
             for (let i = 1; i <= 5; i++) {
                 const star = document.querySelector(`#rating-container .star:nth-child(${i})`);
@@ -148,9 +146,7 @@
             })
             .then((docRef) => {
                 console.log("Feedback written with ID: ", docRef.id);
-
-                // Clear input fields after sending feedback
-                setRating(0); // Reset rating to 0
+                setRating(0);
                 document.getElementById('feedback-category').value = 'satisfied';
                 document.getElementById('feedback-text').value = '';
             })
