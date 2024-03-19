@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
     <script>
+        // Initialize Firebase
         const firebaseConfig = {
-          apiKey: "AIzaSyBZL5ajdJR_wnjrvWhIzxTfCP56MQXf0KI",
-          authDomain: "ivpbs-f2ca0.firebaseapp.com",
-          databaseURL: "https://ivpbs-f2ca0-default-rtdb.firebaseio.com",
-          projectId: "ivpbs-f2ca0",
-          storageBucket: "ivpbs-f2ca0.appspot.com",
-          messagingSenderId: "1049725030175",
-          appId: "1:1049725030175:web:c9bbf54d8e6003060e6a2a",
-          measurementId: "G-8PXXV5TNTR"
+            apiKey: "AIzaSyBZL5ajdJR_wnjrvWhIzxTfCP56MQXf0KI",
+            authDomain: "ivpbs-f2ca0.firebaseapp.com",
+            databaseURL: "https://ivpbs-f2ca0-default-rtdb.firebaseio.com",
+            projectId: "ivpbs-f2ca0",
+            storageBucket: "ivpbs-f2ca0.appspot.com",
+            messagingSenderId: "1049725030175",
+            appId: "1:1049725030175:web:c9bbf54d8e6003060e6a2a",
+            measurementId: "G-8PXXV5TNTR"
         };
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);  
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agency details</title>
+    <title>Agency</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,11 +84,11 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
             text-align: center;
-            margin: 20px auto; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
+            margin: 20px auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .form-container label {
@@ -118,18 +121,24 @@
         }
 
         @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="upper-bar">
         <!-- Your navigation links here -->
     </div>
 
     <div class="form-container" id="agency-form">
-        <h2>Add Company Details</h2>
+        <h2>Add Agency Details</h2>
         <form id="addAgencyForm">
             <div class="form-group">
                 <label for="agencyName">Agency Name:</label>
@@ -148,38 +157,86 @@
                 <input type="email" id="agencyEmail" name="agencyEmail" required>
             </div>
             <div class="form-group">
+                <input type="file" id="imageFile" accept="image/*">
+            </div>
+            <div class="form-group">
                 <button onclick="submitForm()">Submit</button>
             </div>
         </form>
     </div>
 
     <script>
-        function submitForm() {
-            // Extract form data
-            var agencyName = document.getElementById("agencyName").value;
-            var agencyLocation = document.getElementById("agencyLocation").value;
-            var agencyPhone = document.getElementById("agencyPhone").value;
-            var agencyEmail = document.getElementById("agencyEmail").value;
 
-            // Access the Firestore database and add the data
-            var firestore = firebase.firestore();
-            firestore.collection("agency").add({
-                name: agencyName,
-                location: agencyLocation,
-                phone: agencyPhone,
-                email: agencyEmail
-            })
-            .then(function(docRef) {
-                console.log("Document written with ID: ", docRef.id);
-            })
-            .catch(function(error) {
-                console.error("Error adding document: ", error);
-            });
+        // Access Firestore and Storage
+        const firestore = firebase.firestore();
+        const storage = firebase.storage();
 
-            // Reset form
-            document.getElementById("addAgencyForm").reset();
+        function uploadImage(docId, imageFile) {
+            if (imageFile) {
+                const storageRef = storage.ref();
+                const imageRef = storageRef.child('agency_images/' + docId);
+
+                // Upload file to the storage reference
+                return imageRef.put(imageFile)
+                    .then((snapshot) => {
+                        console.log('Uploaded a blob or file!', snapshot);
+                        return snapshot.ref.getDownloadURL(); // Get download URL of the uploaded image
+                    })
+                    .catch((error) => {
+                        console.error('Error uploading file: ', error);
+                    });
+            }
         }
+
+        function submitForm() {
+    // Prevent default form submission
+    event.preventDefault();
+
+    // Extract form data
+    var agencyName = document.getElementById("agencyName").value;
+    var agencyLocation = document.getElementById("agencyLocation").value;
+    var agencyPhone = document.getElementById("agencyPhone").value;
+    var agencyEmail = document.getElementById("agencyEmail").value;
+    var imageFile = document.getElementById("imageFile").files[0];
+
+    // Define variable to store document ID
+    var newDocId;
+
+    // Access the Firestore database and add the data
+    firestore.collection("agency").add({
+        name: agencyName,
+        location: agencyLocation,
+        phone: agencyPhone,
+        email: agencyEmail,
+    })
+    .then(function (docRef) {
+        // Assign the document ID to the variable
+        newDocId = docRef.id;
+        console.log("Document written with ID: ", newDocId);
+        // Upload image to Storage
+        return uploadImage(newDocId, imageFile);
+    })
+    .then(function (downloadURL) {
+        // Add the image URL to the document in Firestore
+        return firestore.collection("agency").doc(newDocId).update({
+            imageURL: downloadURL
+        });
+    })
+    .then(() => {
+        console.log("Image URL added to document");
+    })
+    .catch(function (error) {
+        console.error("Error adding document: ", error);
+    });
+
+    // Reset form
+    document.getElementById("addAgencyForm").reset();
+}
+
+
     </script>
 </body>
+
 </html>
+
 
