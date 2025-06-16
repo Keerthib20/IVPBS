@@ -226,40 +226,44 @@
          });
         });
 
-      function searchDestination()  {
-        var destination = document.getElementById('destinationInput').value;
-            if (destination) {
-                // Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your actual API key
-                var apiKey = AIzaSyAmh7fv6bhJqKS4cuN8qKZfm2CZhGPbtxM;
-                
-                // Google Maps API URL with the destination
-                var mapsApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=${destination}&key=${apiKey}';
-                // Fetch the data and display the map
-                fetch(mapsApiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.results && data.results.length > 0) {
-                            var location = data.results[0].geometry.location;
+function searchDestination() {
+  var destinationInput = document.getElementById('destinationInput').value;
 
-                            // Check if the coordinates are valid
-                            if (isValidCoordinates(location.lat, location.lng)) {
-                                initMap(location.lat, location.lng);
-                            } else {
-                                console.error('Invalid coordinates. Lat and Lng must be valid numbers.');
-                            }
-                        }
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            } else {
-                // Hide the map if no destination is entered
-                document.getElementById('map').style.display = 'none';
+  if (destinationInput) {
+    // Check if user entered a specific location or a state name
+    if (indianStates.indexOf(destinationInput) > -1) {
+      // Loop through all states in the array and perform map search for each
+      for (var i = 0; i < indianStates.length; i++) {
+        var stateName = indianStates[i];
+        // Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your actual API key
+        var apiKey = 'AIzaSyAmh7fv6bhJqKS4cuN8qKZfm2CZhGPbtxM';
+        var mapsApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + stateName + '&key=' + apiKey;
+
+        // Fetch data and display map for each state
+        fetch(mapsApiUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.results && data.results.length > 0) {
+              var location = data.results[0].geometry.location;
+              if (isValidCoordinates(location.lat, location.lng)) {
+                initMap(location.lat, location.lng, stateName); // Pass state name to initMap
+              } else {
+                console.error('Invalid coordinates for state:', stateName);
+              }
             }
-        }
+          })
+          .catch(error => console.error('Error fetching data for state:', stateName, error));
+      }
+    } else {
+      // Perform search for the specific location entered by the user (original functionality)
+      // ... (rest of your existing code to search for a single location)
+    }
+  } else {
+    // Hide the map if no destination is entered
+    document.getElementById('map').style.display = 'none';
+  }
+}
 
-        // Function to check if coordinates are valid numbers
-        function isValidCoordinates(lat, lng) {
-            return typeof lat === 'number' && typeof lng === 'number' && !isNaN(lat) && !isNaN(lng);
-        }
     </script>
     
     
